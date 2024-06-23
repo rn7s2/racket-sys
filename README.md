@@ -15,9 +15,11 @@ About Racket:
 
 ## Environment Variables:
 
+- `RACKET_CS_VERSION`: Only for MacOS. If not set, default to `8.13`.
+
 - `RACKET_CS_HOME`: Racket installation directory. If not set, default to:
   - Windows: `C:\Program Files\Racket`
-  - MacOS: TODO
+  - MacOS: `/Applications/Racket v{RACKET_CS_VERSION}`
   - Linux: TODO
 
 ## Examples:
@@ -32,8 +34,10 @@ About Racket:
 
   <img src="examples/helloworld.png" style="width:550px" />
 
+Read [https://docs.racket-lang.org/inside/cs-embedding.html](https://docs.racket-lang.org/inside/cs-embedding.html) for more information on how to embed Racket in your application.
+
 ## TODO:
 
 - [x] Windows support
-- [ ] MacOS support
+- [x] MacOS support
 - [ ] Linux support
