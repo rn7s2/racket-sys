@@ -49,7 +49,17 @@ About Racket:
 
   screenshot on Windows:
 
-  <img src="examples/helloworld.png" style="width:550px" />
+  <img src="examples/helloworld.png" style="width:600px" />
+
+- factorial [examples/factorial.rs](examples/factorial.rs) and [examples/factorial.rkt](examples/factorial.rkt):
+
+  ```
+  cargo run --example factorial
+  ```
+
+  screenshot on Windows:
+
+  <img src="examples/factorial.png" style="width:550px" />
 
 Read [https://docs.racket-lang.org/inside/cs-embedding.html](https://docs.racket-lang.org/inside/cs-embedding.html) for more information on how to embed Racket in your application.
 
