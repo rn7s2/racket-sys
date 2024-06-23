@@ -53,6 +53,8 @@ About Racket:
 
 - factorial [examples/factorial.rs](examples/factorial.rs) and [examples/factorial.rkt](examples/factorial.rkt):
 
+  This example demos how to require Racket module from Rust code.
+
   ```
   cargo run --example factorial
   ```
@@ -60,6 +62,11 @@ About Racket:
   screenshot on Windows:
 
   <img src="examples/factorial.png" style="width:550px" />
+
+  Note: set env variable `RKT_COLLECTS_DIR` to `racket installation/collects`. For example, on MacOS:
+  ```
+  RKT_COLLECTS_DIR=/Applications/Racket\ v8.13/collects cargo run --example factorial
+  ```
 
 Read [https://docs.racket-lang.org/inside/cs-embedding.html](https://docs.racket-lang.org/inside/cs-embedding.html) for more information on how to embed Racket in your application.
 
