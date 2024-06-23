@@ -17,10 +17,11 @@ About Racket:
   - Set environment variables (see below)
 
 - Windows:
+
   - `Visual Studio` is installed
-  - Run `cargo` in `Developer PowerShell for VS`
 
 - MacOS:
+
   - `Xcode CommandLine tools` is installed
   - `iconv`, `ncurses` development libraries
 

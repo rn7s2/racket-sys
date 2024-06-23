@@ -40,7 +40,9 @@ fn main() {
             path
         };
 
-        let status = Command::new("lib")
+        let lib_tool_exe =
+            locate_vs_lib_tool().expect("Failed to locate lib.exe from VS installation.");
+        let status = Command::new(lib_tool_exe)
             .arg(&format!("/def:{}", def_path.to_str().unwrap()))
             .arg(&format!("/out:{}", lib_path.to_str().unwrap()))
             .arg("/machine:x64")
@@ -226,4 +228,21 @@ pub fn copy_recursively(
         }
     }
     Ok(())
+}
+
+fn locate_vs_lib_tool() -> Option<PathBuf> {
+    #[cfg(target_os = "windows")]
+    {
+        let mut vcvars = vcvars::Vcvars::new();
+        let path = vcvars.get_cached("PATH").unwrap().to_string();
+        let dirs = path.split(";").collect::<Vec<_>>();
+        for dir in &dirs {
+            let mut exe = PathBuf::from(dir);
+            exe.push("lib.exe");
+            if exe.exists() {
+                return Some(exe);
+            }
+        }
+    }
+    None
 }

@@ -1,6 +1,6 @@
 [package]
 name = "racket-sys"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["rn7s2 <mail@rn7s2.cn>"]
 edition = "2021"
 build = "build.rs"
@@ -9,9 +9,9 @@ categories = ["external-ffi-bindings"]
 keywords = ["ffi", "bindings", "scheme", "scripting", "interpreter"]
 description = "Low level Racket language bindings for Rust"
 repository = "https://github.com/rn7s2/racket-sys"
-documentation = "https://docs.rs/racket-sys"
-
-[dependencies]
 
 [build-dependencies]
 bindgen = "0.69.4"
+
+[target.x86_64-pc-windows-msvc.build-dependencies]
+vcvars = "0.1.6"
