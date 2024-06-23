@@ -9,9 +9,21 @@ About Racket:
 
 ## Prerequisites:
 
-- `Visual Studio` is installed
-- Run `cargo` in `Developer PowerShell for VS`
-- `Clang` toolchain is required to generate the bindings
+- Base env:
+
+  - `Rust` toolchain
+  - `Clang` toolchain
+  - `Racket` installation
+  - Set environment variables (see below)
+
+- Windows:
+
+  - `Visual Studio` is installed
+  - Run `cargo` in `Developer PowerShell for VS`
+
+- MacOS:
+  - `Xcode CommandLine tools` is installed
+  - `iconv`, `ncurses` development libraries
 
 ## Environment Variables:
 
