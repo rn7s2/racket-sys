@@ -15,7 +15,7 @@ fn main() {
         } else if cfg!(target_os = "macos") {
             PathBuf::from(home.unwrap_or("/Applications/Racket v".to_string() + MAC_DEFAULT_RKT))
         } else {
-            panic!("Platform is not supported yet!");
+            PathBuf::from(home.unwrap_or("/usr/".to_string()))
         }
     };
     let out_dir = {
@@ -79,13 +79,26 @@ fn main() {
         println!("cargo:rustc-link-lib=ncurses");
         println!("cargo:rustc-link-lib=framework=CoreFoundation");
     } else {
-        panic!("Platform is not supported yet!");
+        let lib_dir = {
+            let mut path = rkt_home.clone();
+            path.push("lib");
+            path
+        };
+        println!("cargo:rustc-link-search={}", lib_dir.display());
+        println!("cargo:rustc-link-lib=racketcs");
+
+        println!("cargo:rustc-link-lib=ncurses");
+        println!("cargo:rustc-link-lib=lz4");
+        println!("cargo:rustc-link-lib=z");
     }
 
     // generate bindings
     let headers = {
         let mut path = rkt_home.clone();
         path.push("include");
+        if cfg!(target_os = "linux") {
+            path.push("racket");
+        }
 
         let cs_h = path.join("chezscheme.h");
         let rkt_h = path.join("racketcs.h");
@@ -174,7 +187,25 @@ fn main() {
         )
         .expect("Failed to copy Racket framework.");
     } else {
-        panic!("Platform is not supported yet!");
+        let bootfile_dir = {
+            let mut path = rkt_home.clone();
+            path.push("lib");
+            path.push("racket");
+            path
+        };
+        for boot_file in boot_files.iter() {
+            let boot_path = {
+                let mut path = bootfile_dir.clone();
+                path.push(boot_file);
+                path
+            };
+
+            fs::copy(
+                boot_path,
+                out_dir.to_str().unwrap().to_string() + "/" + boot_file,
+            )
+            .expect("Failed to copy boot file.");
+        }
     }
 }
 

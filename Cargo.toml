@@ -1,6 +1,6 @@
 [package]
 name = "racket-sys"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["rn7s2 <mail@rn7s2.cn>"]
 edition = "2021"
 build = "build.rs"

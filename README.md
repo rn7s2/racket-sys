@@ -17,13 +17,17 @@ About Racket:
   - Set environment variables (see below)
 
 - Windows:
-
   - `Visual Studio` is installed
   - Run `cargo` in `Developer PowerShell for VS`
 
 - MacOS:
   - `Xcode CommandLine tools` is installed
   - `iconv`, `ncurses` development libraries
+
+- Linux:
+  - Only tested on Ubuntu 24.04
+  - Racket is installed through APT
+  - `libncurses-dev`, `liblz4-dev`, `libzstd-dev` development libraries
 
 ## Environment Variables:
 
@@ -32,7 +36,7 @@ About Racket:
 - `RACKET_CS_HOME`: Racket installation directory. If not set, default to:
   - Windows: `C:\Program Files\Racket`
   - MacOS: `/Applications/Racket v{RACKET_CS_VERSION}`
-  - Linux: TODO
+  - Linux: `/usr`
 
 ## Examples:
 
@@ -52,4 +56,4 @@ Read [https://docs.racket-lang.org/inside/cs-embedding.html](https://docs.racket
 
 - [x] Windows support
 - [x] MacOS support
-- [ ] Linux support
+- [x] Linux support
