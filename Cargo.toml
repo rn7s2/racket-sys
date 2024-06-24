@@ -13,10 +13,11 @@ documentation = "https://docs.rs/racket-sys"
 
 [features]
 default = ["bundled"]
-bundled = []
+bundled = ["dep:git2"]
 
 [build-dependencies]
 bindgen = "0.69.4"
+git2 = { version = "0.19.0", optional = true }
 
 [target.x86_64-pc-windows-msvc.build-dependencies]
 vcvars = "0.1.6"

@@ -11,6 +11,18 @@ fn main() {
         path
     };
     let crate_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let bundle_dir = crate_root.join("bundled");
+
+    if fs::metadata(&bundle_dir).is_err() {
+        let url = "https://github.com/rn7s2/racket-bundled.git";
+        match git2::Repository::clone(url, &bundle_dir) {
+            Ok(_) => (),
+            Err(e) => {
+                _ = fs::remove_dir_all(&bundle_dir);
+                panic!("Failed to clone: {}", e);
+            }
+        };
+    }
 
     // link libraries
     println!("cargo:rustc-link-search=native=m");
