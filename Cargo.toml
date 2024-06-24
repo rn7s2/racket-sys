@@ -1,13 +1,13 @@
 [package]
 name = "racket-sys"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["rn7s2 <mail@rn7s2.cn>"]
 edition = "2021"
 build = "build.rs"
 license = "MIT"
 categories = ["external-ffi-bindings"]
 keywords = ["ffi", "bindings", "scheme", "scripting", "interpreter"]
-description = "Low level Racket language bindings for Rust"
+description = "Rust bindings to Racket C API"
 repository = "https://github.com/rn7s2/racket-sys"
 documentation = "https://rn7s2.github.io/racket-sys/racket_sys/"
 

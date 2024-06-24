@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/racket-sys.svg)](https://crates.io/crates/racket-sys)
 
-Low level Racket language bindings for Rust
+Rust bindings to Racket C API
 
 About Racket:
 [https://racket-lang.org/](https://racket-lang.org/).
