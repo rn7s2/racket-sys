@@ -10,8 +10,7 @@ fn main() {
         _ = path.pop() && path.pop() && path.pop();
         path
     };
-    let crate_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let bundle_dir = crate_root.join("bundled");
+    let bundle_dir = out_dir.join("bundled");
 
     if fs::metadata(&bundle_dir).is_err() {
         let url = "https://github.com/rn7s2/racket-bundled.git";
@@ -30,8 +29,7 @@ fn main() {
     let headers;
     if cfg!(windows) {
         let lib_path = {
-            let mut path = crate_root.clone();
-            path.push("bundled");
+            let mut path = bundle_dir.clone();
             path.push("windows");
             path
         };
@@ -51,8 +49,7 @@ fn main() {
         };
     } else if cfg!(target_os = "macos") {
         let lib_path = {
-            let mut path = crate_root.clone();
-            path.push("bundled");
+            let mut path = bundle_dir.clone();
             path.push("macos");
             path
         };
@@ -76,8 +73,7 @@ fn main() {
         };
     } else {
         let lib_path = {
-            let mut path = crate_root.clone();
-            path.push("bundled");
+            let mut path = bundle_dir.clone();
             path.push("linux");
             path
         };
@@ -116,8 +112,7 @@ fn main() {
     let boot_files = ["petite.boot", "scheme.boot", "racket.boot"];
     if cfg!(windows) {
         let dll_path = {
-            let mut path = crate_root.clone();
-            path.push("bundled");
+            let mut path = bundle_dir.clone();
             path.push("windows");
             path.push("libracketcs_dg1etc.dll");
             path
@@ -132,8 +127,7 @@ fn main() {
         // copy boot files
         for boot_file in boot_files.iter() {
             let boot_path = {
-                let mut path = crate_root.clone();
-                path.push("bundled");
+                let mut path = bundle_dir.clone();
                 path.push("windows");
                 path.push(boot_file);
                 path
@@ -149,8 +143,7 @@ fn main() {
         // copy boot files
         for boot_file in boot_files.iter() {
             let boot_path = {
-                let mut path = crate_root.clone();
-                path.push("bundled");
+                let mut path = bundle_dir.clone();
                 path.push("macos");
                 path.push(boot_file);
                 path
@@ -164,8 +157,7 @@ fn main() {
         }
 
         // copy framework
-        let mut framework_dir = crate_root.clone();
-        framework_dir.push("bundled");
+        let mut framework_dir = bundle_dir.clone();
         framework_dir.push("macos");
         framework_dir.push("Racket.framework");
 
@@ -179,8 +171,7 @@ fn main() {
         .expect("Failed to copy Racket framework.");
     } else {
         let bootfile_dir = {
-            let mut path = crate_root.clone();
-            path.push("bundled");
+            let mut path = bundle_dir.clone();
             path.push("linux");
             path
         };
