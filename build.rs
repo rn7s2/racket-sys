@@ -1,11 +1,198 @@
 use std::path::{Path, PathBuf};
-use std::process::Command;
 use std::{env, fs};
 
-const MAC_DEFAULT_RKT: &str = "8.13";
-
+#[cfg(feature = "bundled")]
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
+
+    let out_dir = {
+        let mut path = PathBuf::from(env::var("OUT_DIR").unwrap());
+        _ = path.pop() && path.pop() && path.pop();
+        path
+    };
+    let crate_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+    // link libraries
+    println!("cargo:rustc-link-search=native=m");
+
+    let headers;
+    if cfg!(windows) {
+        let lib_path = {
+            let mut path = crate_root.clone();
+            path.push("bundled");
+            path.push("windows");
+            path
+        };
+
+        // link dynamic library
+        println!("cargo:rustc-link-search={}", lib_path.display());
+        println!("cargo:rustc-link-lib=libracketcs_dg1etc");
+
+        headers = {
+            let path = lib_path.clone();
+            let cs_h = path.join("chezscheme.h");
+            let rkt_h = path.join("racketcs.h");
+            (
+                cs_h.to_str().unwrap().to_string(),
+                rkt_h.to_str().unwrap().to_string(),
+            )
+        };
+    } else if cfg!(target_os = "macos") {
+        let lib_path = {
+            let mut path = crate_root.clone();
+            path.push("bundled");
+            path.push("macos");
+            path
+        };
+
+        // link library
+        println!("cargo:rustc-link-search={}", lib_path.display());
+        println!("cargo:rustc-link-lib=racketcs");
+
+        println!("cargo:rustc-link-lib=iconv");
+        println!("cargo:rustc-link-lib=ncurses");
+        println!("cargo:rustc-link-lib=framework=CoreFoundation");
+
+        headers = {
+            let path = lib_path.clone();
+            let cs_h = path.join("chezscheme.h");
+            let rkt_h = path.join("racketcs.h");
+            (
+                cs_h.to_str().unwrap().to_string(),
+                rkt_h.to_str().unwrap().to_string(),
+            )
+        };
+    } else {
+        let lib_path = {
+            let mut path = crate_root.clone();
+            path.push("bundled");
+            path.push("linux");
+            path
+        };
+        println!("cargo:rustc-link-search={}", lib_path.display());
+        println!("cargo:rustc-link-lib=racketcs");
+
+        println!("cargo:rustc-link-lib=ncurses");
+        println!("cargo:rustc-link-lib=lz4");
+        println!("cargo:rustc-link-lib=z");
+
+        headers = {
+            let path = lib_path.clone();
+            let cs_h = path.join("chezscheme.h");
+            let rkt_h = path.join("racketcs.h");
+            (
+                cs_h.to_str().unwrap().to_string(),
+                rkt_h.to_str().unwrap().to_string(),
+            )
+        };
+    }
+
+    // generate bindings
+    let bindings = bindgen::Builder::default()
+        .header(headers.0)
+        .header(headers.1)
+        .generate()
+        .expect("Unable to generate bindings!");
+
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
+
+    // copy dependencies to output directory
+    // works even if this crate is a dependency of another crate
+    let boot_files = ["petite.boot", "scheme.boot", "racket.boot"];
+    if cfg!(windows) {
+        let dll_path = {
+            let mut path = crate_root.clone();
+            path.push("bundled");
+            path.push("windows");
+            path.push("libracketcs_dg1etc.dll");
+            path
+        };
+
+        fs::copy(
+            dll_path,
+            out_dir.to_str().unwrap().to_string() + "/libracketcs_dg1etc.dll",
+        )
+        .expect("Failed to copy dll file.");
+
+        // copy boot files
+        for boot_file in boot_files.iter() {
+            let boot_path = {
+                let mut path = crate_root.clone();
+                path.push("bundled");
+                path.push("windows");
+                path.push(boot_file);
+                path
+            };
+
+            fs::copy(
+                boot_path,
+                out_dir.to_str().unwrap().to_string() + "/" + boot_file,
+            )
+            .expect("Failed to copy boot file.");
+        }
+    } else if cfg!(target_os = "macos") {
+        // copy boot files
+        for boot_file in boot_files.iter() {
+            let boot_path = {
+                let mut path = crate_root.clone();
+                path.push("bundled");
+                path.push("macos");
+                path.push(boot_file);
+                path
+            };
+
+            fs::copy(
+                boot_path,
+                out_dir.to_str().unwrap().to_string() + "/" + boot_file,
+            )
+            .expect("Failed to copy boot file.");
+        }
+
+        // copy framework
+        let mut framework_dir = crate_root.clone();
+        framework_dir.push("bundled");
+        framework_dir.push("macos");
+        framework_dir.push("Racket.framework");
+
+        let mut out_dir = out_dir.clone();
+        out_dir.pop();
+        out_dir.pop();
+        copy_recursively(
+            framework_dir,
+            out_dir.to_str().unwrap().to_string() + "/Racket.framework",
+        )
+        .expect("Failed to copy Racket framework.");
+    } else {
+        let bootfile_dir = {
+            let mut path = crate_root.clone();
+            path.push("bundled");
+            path.push("linux");
+            path
+        };
+        for boot_file in boot_files.iter() {
+            let boot_path = {
+                let mut path = bootfile_dir.clone();
+                path.push(boot_file);
+                path
+            };
+
+            fs::copy(
+                boot_path,
+                out_dir.to_str().unwrap().to_string() + "/" + boot_file,
+            )
+            .expect("Failed to copy boot file.");
+        }
+    }
+}
+
+#[cfg(not(feature = "bundled"))]
+fn main() {
+    println!("cargo:rerun-if-changed=build.rs");
+
+    const DEFAULT_RKT_VER: &str = "8.13";
 
     // directories
     let rkt_home = {
@@ -13,7 +200,7 @@ fn main() {
         if cfg!(windows) {
             PathBuf::from(home.unwrap_or("C:/Program Files/Racket".to_string()))
         } else if cfg!(target_os = "macos") {
-            PathBuf::from(home.unwrap_or("/Applications/Racket v".to_string() + MAC_DEFAULT_RKT))
+            PathBuf::from(home.unwrap_or("/Applications/Racket v".to_string() + DEFAULT_RKT_VER))
         } else {
             PathBuf::from(home.unwrap_or("/usr/".to_string()))
         }
@@ -42,7 +229,7 @@ fn main() {
 
         let lib_tool_exe =
             locate_vs_lib_tool().expect("Failed to locate lib.exe from VS installation.");
-        let status = Command::new(lib_tool_exe)
+        let status = std::process::Command::new(lib_tool_exe)
             .arg(&format!("/def:{}", def_path.to_str().unwrap()))
             .arg(&format!("/out:{}", lib_path.to_str().unwrap()))
             .arg("/machine:x64")
@@ -56,7 +243,7 @@ fn main() {
         println!("cargo:rustc-link-search={}", out_dir.display());
         println!("cargo:rustc-link-lib=libracketcs_dg1etc");
     } else if cfg!(target_os = "macos") {
-        let version = env::var("RACKET_CS_VERSION").unwrap_or(MAC_DEFAULT_RKT.to_string());
+        let version = env::var("RACKET_CS_VERSION").unwrap_or(DEFAULT_RKT_VER.to_string());
         let lib_path = {
             let mut path = rkt_home.clone();
             path.push("lib");
@@ -155,7 +342,7 @@ fn main() {
         }
     } else if cfg!(target_os = "macos") {
         // copy boot files
-        let version = env::var("RACKET_CS_VERSION").unwrap_or(MAC_DEFAULT_RKT.to_string());
+        let version = env::var("RACKET_CS_VERSION").unwrap_or(DEFAULT_RKT_VER.to_string());
         for boot_file in boot_files.iter() {
             let boot_path = {
                 let mut path = rkt_home.clone();
@@ -213,7 +400,7 @@ fn main() {
 
 /// Copy files from source to destination recursively.
 /// thanks: https://nick.groenen.me/notes/recursively-copy-files-in-rust/
-pub fn copy_recursively(
+fn copy_recursively(
     source: impl AsRef<Path>,
     destination: impl AsRef<Path>,
 ) -> std::io::Result<()> {
@@ -230,6 +417,7 @@ pub fn copy_recursively(
     Ok(())
 }
 
+#[allow(dead_code)]
 fn locate_vs_lib_tool() -> Option<PathBuf> {
     #[cfg(target_os = "windows")]
     {

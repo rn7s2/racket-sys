@@ -9,28 +9,25 @@ About Racket:
 
 ## Prerequisites:
 
-- Base env:
-
-  - `Rust` toolchain
-  - `Clang` toolchain
-  - `Racket` installation
-  - Set environment variables (see below)
-
-- Windows:
-
-  - `Visual Studio` is installed
-
-- MacOS:
-
-  - `Xcode CommandLine tools` is installed
-  - `iconv`, `ncurses` development libraries
-
+- Base env: `Rust` toolchain, `Clang` toolchain and `Racket` installation
+- Windows: `Visual Studio`
+- MacOS: `Xcode CommandLine tools`, `iconv`, `ncurses`
 - Linux:
   - Only tested on Ubuntu 24.04
-  - Racket is installed through APT
-  - `libncurses-dev`, `liblz4-dev`, `libzstd-dev` development libraries
+  - `sudo apt install racket libncurses-dev`, `liblz4-dev`, `libzstd-dev`
 
-## Environment Variables:
+## Installation:
+
+### Use bundled Racket (default feature):
+
+This crate includes a prebuilt Racket runtime for Windows, MacOS, and Linux.
+
+- For Windows and MacOS, the bundled Racket 8.13 comes from official Racket distribution.
+- For Linux, the bundled Racket 8.10 comes from Ubuntu APT.
+
+### Use system Racket:
+
+Set environment variables (see below):
 
 - `RACKET_CS_VERSION`: Only for MacOS. If not set, default to `8.13`.
 
@@ -64,14 +61,9 @@ About Racket:
   <img src="examples/factorial.png" style="width:550px" />
 
   Note: set env variable `RKT_COLLECTS_DIR` to `racket installation/collects`. For example, on MacOS:
+
   ```
   RKT_COLLECTS_DIR=/Applications/Racket\ v8.13/collects cargo run --example factorial
   ```
 
 Read [https://docs.racket-lang.org/inside/cs-embedding.html](https://docs.racket-lang.org/inside/cs-embedding.html) for more information on how to embed Racket in your application.
-
-## TODO:
-
-- [x] Windows support
-- [x] MacOS support
-- [x] Linux support
