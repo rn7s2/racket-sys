@@ -10,6 +10,8 @@ keywords = ["ffi", "bindings", "scheme", "scripting", "interpreter"]
 description = "Low level Racket language bindings for Rust"
 repository = "https://github.com/rn7s2/racket-sys"
 documentation = "https://docs.rs/racket-sys"
+exclude = ["/bundled"]
+
 
 [features]
 default = ["bundled"]
