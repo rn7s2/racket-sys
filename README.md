@@ -22,14 +22,14 @@ About Racket:
 
 This crate includes a prebuilt Racket runtime for Windows, MacOS, and Linux.
 
-- For Windows and MacOS, the bundled Racket 8.13 comes from official Racket distribution.
-- For Linux, the bundled Racket 8.10 comes from Ubuntu APT.
+- For Windows and MacOS, the bundled Racket comes from official Racket distribution.
+- For Linux, the bundled Racket comes from Ubuntu APT.
 
 ### Use system Racket:
 
 Set environment variables (see below):
 
-- `RACKET_CS_VERSION`: Only for MacOS. If not set, default to `8.13`.
+- `RACKET_CS_VERSION`: Only for MacOS. If not set, default to `8.15`.
 
 - `RACKET_CS_HOME`: Racket installation directory. If not set, default to:
   - Windows: `C:\Program Files\Racket`

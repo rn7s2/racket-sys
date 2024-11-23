@@ -36,7 +36,7 @@ fn main() {
 
         // link dynamic library
         println!("cargo:rustc-link-search={}", lib_path.display());
-        println!("cargo:rustc-link-lib=libracketcs_dg1etc");
+        println!("cargo:rustc-link-lib=libracketcs_dh8a0w");
 
         headers = {
             let path = lib_path.clone();
@@ -114,13 +114,13 @@ fn main() {
         let dll_path = {
             let mut path = bundle_dir.clone();
             path.push("windows");
-            path.push("libracketcs_dg1etc.dll");
+            path.push("libracketcs_dh8a0w.dll");
             path
         };
 
         fs::copy(
             dll_path,
-            out_dir.to_str().unwrap().to_string() + "/libracketcs_dg1etc.dll",
+            out_dir.to_str().unwrap().to_string() + "/libracketcs_dh8a0w.dll",
         )
         .expect("Failed to copy dll file.");
 
@@ -221,12 +221,12 @@ fn main() {
         let def_path = {
             let mut path = rkt_home.clone();
             path.push("lib");
-            path.push("libracketcs_dg1etc.def");
+            path.push("libracketcs_dh8a0w.def");
             path
         };
         let lib_path = {
             let mut path = out_dir.clone();
-            path.push("libracketcs_dg1etc.lib");
+            path.push("libracketcs_dh8a0w.lib");
             path
         };
 
@@ -244,7 +244,7 @@ fn main() {
 
         // link dynamic library
         println!("cargo:rustc-link-search={}", out_dir.display());
-        println!("cargo:rustc-link-lib=libracketcs_dg1etc");
+        println!("cargo:rustc-link-lib=libracketcs_dh8a0w");
     } else if cfg!(target_os = "macos") {
         let version = env::var("RACKET_CS_VERSION").unwrap_or(DEFAULT_RKT_VER.to_string());
         let lib_path = {
@@ -318,13 +318,13 @@ fn main() {
         let dll_path = {
             let mut path = rkt_home.clone();
             path.push("lib");
-            path.push("libracketcs_dg1etc.dll");
+            path.push("libracketcs_dh8a0w.dll");
             path
         };
 
         fs::copy(
             dll_path,
-            out_dir.to_str().unwrap().to_string() + "/libracketcs_dg1etc.dll",
+            out_dir.to_str().unwrap().to_string() + "/libracketcs_dh8a0w.dll",
         )
         .expect("Failed to copy dll file.");
 

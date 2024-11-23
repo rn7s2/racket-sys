@@ -2,7 +2,10 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-use std::{os::raw, ptr::null};
+use std::{
+    os::raw::{self, c_char, c_void},
+    ptr::null,
+};
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
@@ -10,27 +13,30 @@ impl Default for racket_boot_arguments_t {
     fn default() -> Self {
         Self {
             boot1_path: null(),
+            boot1_data: 0 as *mut c_void,
             boot1_offset: 0,
             boot1_len: 0,
             boot2_path: null(),
+            boot2_data: 0 as *mut c_void,
             boot2_offset: 0,
             boot2_len: 0,
             boot3_path: null(),
+            boot3_data: 0 as *mut c_void,
             boot3_offset: 0,
             boot3_len: 0,
             argc: 0,
-            argv: 0 as *mut *mut ::std::os::raw::c_char,
+            argv: 0 as *mut *mut c_char,
             exec_file: null(),
             run_file: null(),
             collects_dir: null(),
             config_dir: null(),
-            dll_dir: 0 as *mut ::std::os::raw::c_void,
+            dll_dir: 0 as *mut c_void,
             k_file: null(),
             cs_compiled_subdir: 0,
             segment_offset: 0,
-            dll_open: 0 as *mut ::std::os::raw::c_void,
-            dll_find_object: 0 as *mut ::std::os::raw::c_void,
-            dll_close: 0 as *mut ::std::os::raw::c_void,
+            dll_open: 0 as *mut c_void,
+            dll_find_object: 0 as *mut c_void,
+            dll_close: 0 as *mut c_void,
             exit_after: 0,
             is_gui: 0,
             wm_is_gracket_or_x11_arg_count: 0,

@@ -38,21 +38,22 @@ fn main() {
         let mod_path_str = Sstring(mod_path.into_raw());
         let func_name = CString::new("fact").unwrap();
         let func_sym = Sstring_to_symbol(func_name.into_raw());
-
         let func = Scar(racket_dynamic_require(mod_path_str, func_sym));
-        let x = Sinteger(5);
 
-        let result = Scar(racket_apply(func, Scons(x, Snil)));
+        for num in 0..50 {
+            let x = Sinteger(num);
+            let result = Scar(racket_apply(func, Scons(x, Snil)));
 
-        let display_name = CString::new("display").unwrap();
-        let display = racket_primitive(display_name.into_raw());
+            let display_name = CString::new("display").unwrap();
+            let display = racket_primitive(display_name.into_raw());
 
-        let txt = CString::new("f(5)=").unwrap();
-        Scall1(display, Sstring(txt.into_raw()));
-        Scall1(display, result);
+            let txt = CString::new(format!("f({num}) = ")).unwrap();
+            Scall1(display, Sstring(txt.into_raw()));
+            Scall1(display, result);
 
-        let newline_name = CString::new("newline").unwrap();
-        let newline = racket_primitive(newline_name.into_raw());
-        Scall0(newline);
+            let newline_name = CString::new("newline").unwrap();
+            let newline = racket_primitive(newline_name.into_raw());
+            Scall0(newline);
+        }
     }
 }

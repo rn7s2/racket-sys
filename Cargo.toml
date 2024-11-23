@@ -1,6 +1,6 @@
 [package]
 name = "racket-sys"
-version = "0.3.2"
+version = "8.15.0"
 authors = ["rn7s2 <mail@rn7s2.cn>"]
 edition = "2021"
 build = "build.rs"
@@ -11,13 +11,12 @@ description = "Rust bindings to Racket C API"
 repository = "https://github.com/rn7s2/racket-sys"
 documentation = "https://rn7s2.github.io/racket-sys/racket_sys/"
 
-
 [features]
 default = ["bundled"]
 bundled = ["dep:git2"]
 
 [build-dependencies]
-bindgen = "0.69.4"
+bindgen = "0.70.1"
 git2 = { version = "0.19.0", optional = true }
 
 [target.x86_64-pc-windows-msvc.build-dependencies]
